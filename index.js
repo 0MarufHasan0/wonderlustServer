@@ -28,6 +28,7 @@ export async function connectToMongoDB() {
 //  DataBase create and collection create
  const db = mongoClient.db('wonderlastt')
  const destinationCollection = db.collection('destination')
+ const bookingCollection = db.collection('bookings')
 
 // fornted theke data collect
 
@@ -92,10 +93,31 @@ app.delete('/destinations/:id', async(req,res)=>{
   res.json(result)
 })
 
+// Booking
+app.post('/booking',async(req,res)=>{
+  const data = req.body
+    // console.log("Booking data:", data);
+
+  const result = await bookingCollection.insertOne(data)
+  res.send(result)
+
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
+//  find er vitor 1st email holo data base poperty name
+// 2nd clone er por email holo params theke
 
+app.get('/my-bookings/:email',async(req,res)=>{
+  const {email} = req.params
+    // console.log("Email received:", email);
+  const result = await bookingCollection.find({
+    email:email
+  }).toArray()
 
+    // console.log("Found bookings:", result);
 
+  res.send(result)
+} )
